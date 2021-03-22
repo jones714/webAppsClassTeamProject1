@@ -66,7 +66,9 @@
       // Set chart options
       var options = {'title':'Number of vampire?',
         'width':700,
-        'height':600};
+        'height':600,
+        slices: {0: {color: '#006EFF'}, 1:{color: '#00FF08'}}
+      };
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
