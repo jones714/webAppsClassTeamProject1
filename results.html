@@ -7,59 +7,10 @@
   <script type="text/javascript">
     // not used in this program, it is only used to show a json data
     // from https://stackoverflow.com/questions/12070631/how-to-use-json-file-in-html-code
-    var sample_json = {
-         "person": [
-             {
-                 "firstName": "Clark",
-                 "lastName": "Kent",
-                 "job": "Reporter",
-                 "age": 20
-             },
-             {
-                 "firstName": "Bruce",
-                 "lastName": "Wayne",
-                 "job": "Playboy",
-                 "age": 30
-             },
-             {
-                 "firstName": "Peter",
-                 "lastName": "Parker",
-                 "job": "Photographer",
-                 "age": 40
-             }
-         ]
-      }
 
-      console.log(sample_json['person'][0]['firstName']);
+    // not used in this program, it is only used to show a json data
+    // from https://json.org/example.html
 
-      // not used in this program, it is only used to show a json data
-      // from https://json.org/example.html
-      var sample_json2 = {
-          "glossary": {
-              "title": "example glossary",
-              "GlossDiv": {
-                      "title": "S",
-                      "GlossList": {
-                          "GlossEntry": {
-                              "ID": "SGML",
-                              "SortAs": "SGML",
-                              "GlossTerm": "Standard Generalized Markup Language",
-                              "Acronym": "SGML",
-                              "Abbrev": "ISO 8879:1986",
-                              "GlossDef": {
-                                            "para": "A meta-markup language, used to create markup languages such as DocBook.",
-                                            "GlossSeeAlso": ["GML", "XML"]
-                                        },
-                              "GlossSee": "markup"
-                      }
-                  }
-              }
-          }
-      }
-
-      // console.log(sample_json2['glossary']['GlossDiv']['GlossList']['GlossEntry']['GlossTerm'])
-      console.log(sample_json2['glossary']['GlossDiv']['GlossList']['GlossEntry']['ID']);
-      
     // array of json objects
     var classmate_data = [
       {
@@ -95,7 +46,7 @@
     ]; // demo in console how to access each element
        // e.g. classmate_data[0]['name']
 
-    
+
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
@@ -103,7 +54,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
 
-    
+
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
     // draws it.
@@ -111,11 +62,13 @@
       var data = new google.visualization.DataTable();
       classmate_data_processing(data);
 
-  
+
       // Set chart options
-      var options = {'title':'How many vampires in the class?',
-                     'width':400,
-                     'height':300};
+      var options = {'title':'Number of vampire?',
+        'width':700,
+        'height':600,
+        slices: {0: {color: '#006EFF'}, 1:{color: '#00FF08'}}
+      };
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -128,7 +81,7 @@
       var num_human = 0;
       var num_vampire = 0;
       for (var i =  0; i <= classmate_data.length - 1; i++) {
-        // logic based on shadow 
+        // logic based on shadow
         if(classmate_data[i]['shadow'] == 'no'){
           num_vampire ++;
         }
@@ -139,7 +92,7 @@
       // Create the data table.
       result_data.addColumn('string', 'Element');
       result_data.addColumn('number', 'Vampire');
-      result_data.addRows([     
+      result_data.addRows([
         ['Human', num_human],
         ['Vampire', num_vampire]
       ]);
@@ -149,7 +102,7 @@
 </head>
 <body>
 
-  <!--Div that will hold the pie chart-->
-  <div id="chart_div"></div>
+<!--Div that will hold the pie chart-->
+<div id="chart_div"></div>
 </body>
-</html> 
+</html>
