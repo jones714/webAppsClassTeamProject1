@@ -7,87 +7,227 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
   <script type="text/javascript">
-    function insert_row(){
-      var table = document.getElementById("saving_table");
-      // Create an empty <tr> element and add it to the 1st position of the table:
-      // BE CAREFUL!!! row 0 is our heading row
-      var row = table.insertRow(1);
-      // Try this
-      // var row = table.insertRow(0);
-      // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
+  function insert_row(){
+    var user_first_name = document.getElementById('first_name').value;
+    var user_middle_name = document.getElementById('middle_name').value;
+    var user_last_name = document.getElementById('last_name').value;
+    var gender_str;
+    if(document.getElementById('male_radio').checked)
+    {
+      gender_str = "Male";
+    }
+    else
+    {
+      gender_str = "Female";
+    }
+    var garlic_str;
+    if(document.getElementById('garlic_checkbox').checked)
+    {
+      garlic_str = "Yes";
+    }
+    else
+    {
+      garlic_str = "No";
+    }
+    var shadow_str;
+    if(document.getElementById('shadow_checkbox').checked)
+    {
+      shadow_str = "Yes";
+    }
+    else
+    {
+      shadow_str = "No";
+    }
+    var complexion_str;
+    if (document.getElementById('pale_radio').checked)
+    {
+      complexion_str = "Pale";
+    }
+   else if (document.getElementById('brown_radio').checked)
+    {
+      complexion_str = "Brown";
+    }
+    else
+    {
+      complexion_str = "Olive";
+    }
+    var table = document.getElementById("saving_table");
+    // Create an empty <tr> element and add it to the 1st position of the table:
+    // BE CAREFUL!!! row 0 is our heading row
+    var row = table.insertRow(1);
+    // Try this
+    // var row = table.insertRow(0);
+    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
 
-      // Add some text to the new cells:
-      cell1.innerHTML = "Alex";
-      cell2.innerHTML = "$100";
-    }
-    function delete_row(){
-      // delete the second row
-      document.getElementById("saving_table").deleteRow(1);
-    }
-    // based on https://stackoverflow.com/questions/10686888/delete-last-row-in-table
-    function delete_last_row(){
-      var table = document.getElementById('saving_table');
-      var row_count = table.rows.length;
+    // Add some text to the new cells:
+    cell1.innerHTML = user_first_name;
+    cell2.innerHTML = user_middle_name;
+    cell3.innerHTML = user_last_name;
+    cell4.innerHTML = gender_str;
+    cell5.innerHTML = garlic_str;
+    cell6.innerHTML = shadow_str;
+    cell7.innerHTML = complexion_str;
+  }
+  function delete_row(){
+    // delete the second row
+    document.getElementById("saving_table").deleteRow(1);
+  }
+  // based on https://stackoverflow.com/questions/10686888/delete-last-row-in-table
+  function delete_last_row(){
+    var table = document.getElementById('saving_table');
+    var row_count = table.rows.length;
 
-      table.deleteRow(row_count -1);
+    table.deleteRow(row_count -1);
+  }
+
+     function display_chosen_option() {
+      var x = document.getElementById("mySelect").selectedIndex;
+      var y = document.getElementById("mySelect").options;
+      console.log(y[x].innerHTML);
+  
+
+   // array of json objects
+    var classmate_data = []; 
+       // e.g. classmate_data[0]['name']
+
+      var headers = [];
+        $('#saving_table th').each(function(index, item) {
+            headers[index] = $(item).html(); console.log("done");
+        });
+        $('#saving_table tr').has('td').each(function() {
+            var arrayItem = {};
+            $('td', $(this)).each(function(index, item) {
+                arrayItem[headers[index]] = $(item).html(); console.log("done2");
+            });
+            classmate_data.push(arrayItem);
+            console.log("done3");
+        });
+  console.log("done3");
+
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      classmate_data_processing(data);
+
+
+      // Set chart options
+      var options = {'title':'Number of vampire?',
+        'width':700,
+        'height':600,
+        slices: {0: {color: '#006EFF'}, 1:{color: '#00FF08'}}
+      };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
     }
+
+    // model of MVC
+    function classmate_data_processing(result_data){
+      // this function process classmate data and create data table
+      var num_human = 0;
+      var num_vampire = 0;
+      var totalScore = 0;
+
+      if (y[x].innerHTML== "Threshold Based Method"){
+      for (var i =  0; i <= classmate_data.length - 1; i++) {
+
+         if(classmate_data[i]['Shadow'] === "Yes"){
+          
+          totalScore = totalScore + 6;
+          }
+
+          else if (classmate_data[i]['Garlic'] === "Yes"){
+          
+          totalScore = totalScore + 3;
+          }
+
+          else if (classmate_data[i]['Complexion'] === "Pale"){
+          
+          totalScore = totalScore + 3;
+          }
+      
+        // logic based on shadow
+        if(totalScore > 6 ){
+          
+          num_vampire ++;
+        }
+        else{
+        ;
+          num_human ++;
+        }
+      }
+      // Create the data table.
+      result_data.addColumn('string', 'Element');
+      result_data.addColumn('number', 'Vampire');
+      result_data.addRows([
+        ['Human', num_human],
+        ['Vampire', num_vampire]
+      ]);
+
+    }
+    else {
+      for (var i =  0; i <= classmate_data.length - 1; i++) {
+        totalScore = Math.floor(Math.random() * 10);  
+
+      
+        // logic based on shadow
+        if(totalScore > 6 ){
+          
+          num_vampire ++;
+        }
+        else{
+        ;
+          num_human ++;
+        }
+      }
+      // Create the data table.
+      result_data.addColumn('string', 'Element');
+      result_data.addColumn('number', 'Vampire');
+      result_data.addRows([
+        ['Human', num_human],
+        ['Vampire', num_vampire]
+      ]);
+    }
+    }
+  }
   </script>
 </head>
 <body>
 
-<div class="container">
- <table class="table table-bordered" id="saving_table">
-    <caption>Savings</caption>
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Savings</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>January</td>
-        <td>$100</td>
-      </tr>
-      <tr>
-        <td>February</td>
-        <td>$80</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td>Sum</td>
-        <td>$180</td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <script type="text/javascript">
-    function output_user_info(){
-      // use this
-      document.getElementById('first_name').value;
-
-    }
-  </script>
-</head>
-<body>
-
+<div class="container" style="background-color: cadetblue;">
 
 <div class="container">
-  <h2>Form control: input</h2>
+
+  <h1 style="color: coral; text-align: center;">Vamp Chacker 3700</h1>
+  <h2>Classmate Input Form:</h2>
   <form>
     <div class="form-row">
       <!-- md is short for Medium, >= 768 px -->
       <div class="form-group col-md-4">
-        <label for="first_name">Frist Name</label>
+        <label for="first_name">First Name</label>
         <!-- possible types:  text, password, datetime, datetime-local, date, month, time, week, number, email, url, search, tel, and color. -->
-        <input type="text" class="form-control" id="first_name" placeholder="Frist Name">
-        <!-- <input type="time" class="form-control" id="first_name" placeholder="Frist Name"> -->
-        <!-- <input type="color" class="form-control" id="first_name" placeholder="Frist Name"> -->
+        <input type="text" class="form-control" id="first_name" placeholder="First Name">
       </div>
 
       <!-- The .form-group class is the easiest way to add some structure to forms. It provides a flexible class that encourages proper grouping of labels, controls, optional help text, and form validation messaging. -->
@@ -105,8 +245,10 @@
 
    <div class="form-row">
       <div class="form-group col-md-12">
+        <label for="gender">Gender</label>
         <!-- same name so you can only select one option -->
         <div class="radio">
+
           <label><input type="radio" name="optradio" id="male_radio" checked>Male</label>
         </div>
         <div class="radio">
@@ -117,9 +259,10 @@
 
     <div class="form-row">
       <!-- without this, your rows will not be aligned -->
+      <label for="threshold">Threshold</label>
       <div class="form-group col-md-12">
         <div class="checkbox">
-          <label><input type="checkbox" id="galic_checkbox">Galic</label>
+          <label><input type="checkbox" id="garlic_checkbox">Garlic</label>
         </div>
         <div class="checkbox">
           <label><input type="checkbox" id="shadow_checkbox">Shadow</label>
@@ -127,29 +270,124 @@
       </div>
     </div>
 
-  <button href="results.html" class="btn btn-primary" onclick="insert_row()">Insert a Row</button>
-  <button class="btn btn-primary" onclick="delete_row()">Delete the second Row</button>
-  <button class="btn btn-primary" onclick="delete_last_row()">Delete the last Row</button>
+
+
+
+    <div class="form-row">
+       <div class="form-group col-md-12">
+         <!-- <label for="complexion">Complexion</label> -->
+         <!-- same name so you can only select one option -->
+         <div class="radio">
+
+           <label><input type="radio" name="optradio2" id="pale_radio" checked>Complexion-Pale</label>
+         </div>
+         <div class="radio">
+           <label><input type="radio" name="optradio2" id="brown_radio">Complexion-Brown</label>
+         </div>
+         <div class="radio">
+           <label><input type="radio" name="optradio2" id="olive_radio">Complexion-Olive</label>
+         </div>
+       </div>
+     </div>
+
+  </form>
+
+
+
+  <p id="user_info"></p>
+</div>
+<div class="container">
+  <button class="btn btn-primary" onclick="insert_row();display_chosen_option();">Insert Classmate</button>
+  <button class="btn btn-primary" onclick="delete_row()">Delete the second Classmate </button>
+  <button class="btn btn-primary" onclick="delete_last_row()">Delete the last Classmate</button>
+ <table class="table table-bordered" id="saving_table">
+    <caption></caption>
+    <thead>
+      <tr>
+        <th>First-Name</th>
+        <th>Middle-Name</th>
+        <th>Last-Name</th>
+        <th>Gender</th>
+        <th>Garlic</th>
+        <th>Shadow</th>
+        <th>Complexion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>Mills</td>
+        <td>Male</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Pale</td>
+      </tr>
+      <tr>
+        <td>Lee</td>
+        <td>Jim</td>
+        <td>William</td>
+        <td>Male</td>
+        <td>No</td>
+        <td>Yes</td>
+        <td>Pale</td>
+      </tr>
+      <tr>
+        <td>Emma</td>
+        <td>Sana</td>
+        <td>Reds</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Brown</td>
+      </tr>
+      <tr>
+        <td>Ava</td>
+        <td>Sim</td>
+        <td>Sarah</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Olive</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Alex</td>
+        <td>Samuel</td>
+        <td>Robin</td>
+        <td>Female</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Brown</td>
+      </tr>
+    </tfoot>
+  </table>
+
+
 </div>
 
 
 <div class="container">
-  <h2>Form control: select</h2>
+  <h2>Form-Control:</h2>
 
   <div class="form-group">
     <label for="mySelect">Select Model Logic:</label>
     <select class="form-control" id="mySelect">
-      <option value='1'>Random Guess</option>
-      <option value='2'>Threshold Based Method</option>
-      <option value='3'>Decision Tree</option>
-      <option value='4'>Neural Network</option>
-    </select>   
+      <option value='1'>Threshold Based Method</option>
+      <option value='2'>Random Guess</option>
+    
 
-    <!-- write a function to display chosen option with a pop up window. -->
-    <button type="button" onclick="display_chosen_option()">Display index</button>
+    </select>
 
-    <button type="button" onclick="document.getElementById('mySelect').selectedIndex = '-1'">Deselect all options.</button>    
+    <button type="button" class="btn btn-primary" onclick="display_chosen_option()" >Submit</button>
+  
+    <button type="button" onclick="document.getElementById('mySelect').selectedIndex = '-1'">Deselect all options.</button>
   </div>
+
+</div>
+
+<div id="chart_div"></div>
 
 </div>
 
