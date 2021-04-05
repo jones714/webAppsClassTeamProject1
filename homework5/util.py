@@ -1,0 +1,171 @@
+from sklearn.cluster import KMeans
+from flask import Flask, render_template
+import numpy as np
+import psycopg2
+import time
+
+
+def cluster_user_data(result, emotional_col_start=4, emotional_col_end=9, n_clusters=3):
+	'''
+	This function cluster user data based on KMeans algorithm
+	By default, it will split your data into three groups
+	'''
+	# collect answers for five emotional questions
+	# which are located from 4th col to 9th col
+
+	emotional_data = [i[emotional_col_start:emotional_col_end] for i in result]
+
+	# use kmeans to cluster data
+	kmeans = KMeans(n_clusters).fit(emotional_data)
+	# return cluster labels
+	return kmeans.labels_
+
+def split_user_data(result, labels, n_clusters=3):
+	'''
+	this function will split input data into groups
+	based on labels
+	'''
+	result_list = []
+	for i in range(n_clusters):
+		# find indices of each group elements, without [0] the result is tuple
+		tmp_indices = np.where(labels == i)[0]
+		result_list.append([result[i] for i in tmp_indices])
+
+	return result_list
+
+def group1():
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	mcursor.execute("""SELECT * FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Male'; """)
+	result = mcursor.fetchall()
+	return result
+
+def group2():
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	mcursor.execute("""SELECT * FROM public.covid_survey where "How old are you?" >= 36 and "What is your gender?" ='Male'; """)
+	result = mcursor.fetchall()
+	return result
+
+def group3():
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	mcursor.execute("""SELECT * FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Female'; """)
+	result = mcursor.fetchall()
+	return result
+
+def group4():
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	mcursor.execute("""SELECT * FROM public.covid_survey where "How old are you?" >= 36 and "What is your gender?" ='Female'; """)
+	result = mcursor.fetchall()
+	return result
+
+def allcountry():
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	#Create a list all_countires containing elements as list f group1,2,3,4
+
+	group_1=group1()
+
+	group_2=group2()
+	group_3=group3()
+	group_4=group4()
+	countrydict1={}
+	countrydict2={}
+	countrydict3={}
+	countrydict4={}
+	for i in group_1:
+		if i[1] not in countrydict1:
+			countrydict1[i[1]]=[i]
+		else:
+			countrydict1[i[1]].append(i)
+
+	for i in group_2:
+		if i[1] not in countrydict2:
+			countrydict2[i[1]]=[i]
+		else:
+			countrydict2[i[1]].append(i)
+
+
+	for i in group_3:
+		if i[1] not in countrydict3:
+			countrydict3[i[1]]=[i]
+		else:
+			countrydict3[i[1]].append(i)
+
+	for i in group_4:
+		if i[1] not in countrydict4:
+			countrydict4[i[1]]=[i]
+		else:
+			countrydict4[i[1]].append(i)
+
+	print("countrydict1")
+	print(countrydict1.values())
+
+	time.sleep(5)
+	print("countrydict2")
+	print(countrydict2)
+	time.sleep(5)
+	print("countrydict3")
+	print(countrydict3)
+	time.sleep(5)
+	print("countrydict4")
+	print(countrydict4)
+	#for item in result:
+
+	return result
+
+def group1_country():
+	#get list of countries for group1
+	try:
+	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
+	    password="******", host="localhost")
+	    print("connected")
+	except:
+	    print ("I am unable to connect to the database")
+	mcursor =conn.cursor()
+
+	mcursor.execute("""SELECT distinct("What country do you live in?") FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Male';""")
+	result = mcursor.fetchall()
+	print(result)
+	for i in result:
+		j=i[0]
+		print(j)
+		sqldata=str("""SELECT * FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Male' and "What country do you live in?" like '{}%'; """).format(j)
+		mcursor.execute(sqldata)
+		result1=mcursor.fetchall()
+		print(result1)
+	return result1
+	# iterate through list and get tables for each country based on eah group
+	#feed the tables to both functions
