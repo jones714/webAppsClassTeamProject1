@@ -146,31 +146,26 @@ def allcountry():
 
 	return result
 
-def country_group1():
+def group1_country():
 	#get list of countries for group1
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="*****", host="localhost")
+	    password="******", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
 	mcursor =conn.cursor()
-	#get list of countries for group1 SQL is as per group 1
-	mcursor.execute("""SELECT distinct("What country do you live in?") FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Female';""")
-	result_country = mcursor.fetchall()
-	result=list(set([i[0].strip() for i in result_country]))
-	#result=['Israel', 'UK', 'Romania', 'USA', 'Switzerland', 'Rwanda', 'Canada', 'Ireland l', 'Germany']
-	dict_country_group1={}
-	for country in result:
-		# Fetch all rows for first country (each item from result)
-		sqldata=str("""SELECT * FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Female' and "What country do you live in?" like '{}%'; """).format(country)
+
+	mcursor.execute("""SELECT distinct("What country do you live in?") FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Male';""")
+	result = mcursor.fetchall()
+	print(result)
+	for i in result:
+		j=i[0]
+		print(j)
+		sqldata=str("""SELECT * FROM public.covid_survey where "How old are you?" <= 35 and "What is your gender?" ='Male' and "What country do you live in?" like '{}%'; """).format(j)
 		mcursor.execute(sqldata)
-		country_data=mcursor.fetchall()
-
-		dict_country_group1[country]=country_data
-
-
-	#print(dict_country_group1)
-	return result, dict_country_group1
+		result1=mcursor.fetchall()
+		print(result1)
+	return result1
 	# iterate through list and get tables for each country based on eah group
 	#feed the tables to both functions
