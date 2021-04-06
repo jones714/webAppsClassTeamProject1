@@ -25,29 +25,29 @@ Because we are now inside a virtual environment. We do not need sudo.
 
 ### Setup local PostgresSQL Database on Windows:
 
-Download PostgreSQL server  www.postgresql.org .
+* Download PostgreSQL server  www.postgresql.org .
 
-Once the download completes, double click on the file to run the installer.
+* Once the download completes, double click on the file to run the installer.
 
-Click Next on the initial page to begin configuring your installation and choose your installation directory.
+* Click Next on the initial page to begin configuring your installation and choose your installation directory.
 
-The next page allows you to choose which components you wish to install. You need the PostgreSQL Server and Command Line Tools selected at a minimum.
+* The next page allows you to choose which components you wish to install. You need the PostgreSQL Server and Command Line Tools selected at a minimum.
 
-Click Next and choose the location where the database data files will be stored.
+* Click Next and choose the location where the database data files will be stored.
 
-select and confirm an administrative password for the PostgreSQL superuser (called postgres).
+* select and confirm an administrative password for the PostgreSQL superuser (called postgres).
 
-Choose the port 5432.
+* Choose the port 5432.
 
-PostgreSQL is ready to be installed.
+* PostgreSQL is ready to be installed.
 
-Once the installation is complete, you can verify it using the psql command line tool.
+* Once the installation is complete, you can verify it using the psql command line tool.
 
-In your start menu, type psql and click on the tool to launch the program. You will be prompted to enter the connection details that you wish to use.
+* In your start menu, type psql and click on the tool to launch the program. You will be prompted to enter the connection details that you wish to use.
 
-Press Enter to accept the default choices given in the square brackets. The final prompt will be for the password for the postgres user that you configured during setup.
+* Press Enter to accept the default choices given in the square brackets. The final prompt will be for the password for the postgres user that you configured during setup.
 
-Launch PostgresSQL(pgAdmin 4).
+* PostgresSQL(pgAdmin 4) will be launched.
 
 ```
 
