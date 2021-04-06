@@ -27,7 +27,7 @@ Because we are now inside a virtual environment. We do not need sudo.
 
 Download PostgreSQL server  www.postgresql.org .
 
-Once the download completes, double click on the file to run the installer (you may have to confirm that you wish to allow the program to make changes to your computer).
+Once the download completes, double click on the file to run the installer.
 
 Click Next on the initial page to begin configuring your installation and choose your installation directory.
 
