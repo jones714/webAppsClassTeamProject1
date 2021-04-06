@@ -47,7 +47,7 @@ In your start menu, type psql and click on the tool to launch the program. You w
 
 Press Enter to accept the default choices given in the square brackets. The final prompt will be for the password for the postgres user that you configured during setup.
 
-
+Launch PostgresSQL(pgAdmin 4).
 
 ```
 
