@@ -33,16 +33,22 @@ def test4():
 	labels = util.cluster_user_data(result)
 	return render_template('index.html', labels_html=labels, column_html=column_names, data_html=result)
 
-@app.route('/group1_country')
-def test5():
-	result = util.group1_country()
-	if len(result)>10:
-		labels = util.cluster_user_data(result)
-		result1=util.split_user_data(result, labels)
-		for listss in result1:
-			return render_template('index.html', labels_html=labels, column_html=column_names, data_html=listss)
-	else:
-		return ""
+
+@app.route('/country_group1')
+def test6():
+	country, country_result = util.country_group1()
+	for country_item  in country:
+		if len(country_result[country_item]) > 10:
+			result=util.group1()
+			labels = util.cluster_user_data(result)
+			result1=util.split_user_data(country_result[country_item], labels)
+			return render_template('index.html', labels_html=labels, column_html=column_names, data_html=result1)
+		else:
+			result=util.group1()
+			labels = util.cluster_user_data(result)
+			return render_template('index.html', labels_html=labels, column_html=column_names, data_html=result)
+
+
 
 
 if __name__ == '__main__':
