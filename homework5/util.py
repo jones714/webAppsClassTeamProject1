@@ -36,7 +36,7 @@ def split_user_data(result, labels, n_clusters=3):
 def group1():
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -49,7 +49,7 @@ def group1():
 def group2():
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -62,7 +62,7 @@ def group2():
 def group3():
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -75,7 +75,7 @@ def group3():
 def group4():
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -88,7 +88,7 @@ def group4():
 def allcountry():
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -150,7 +150,7 @@ def country_group1():
 	#get list of countries for group1
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -181,7 +181,7 @@ def country_group2():
 	#get list of countries for group1
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -213,7 +213,7 @@ def country_group3():
 	#get list of countries for group1
 	try:
 	    conn = psycopg2.connect(database="homework_webapp", user="postgres",
-	    password="aq1sw2de", host="localhost")
+	    password="*****", host="localhost")
 	    print("connected")
 	except:
 	    print ("I am unable to connect to the database")
@@ -245,7 +245,7 @@ def country_group4():
 	#get list of countries for group1
 	try:
 		conn = psycopg2.connect(database="homework_webapp", user="postgres",
-		password="aq1sw2de", host="localhost")
+		password="*****", host="localhost")
 		print("connected")
 	except:
 		print ("I am unable to connect to the database")
