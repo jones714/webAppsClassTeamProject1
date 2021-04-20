@@ -1,0 +1,68 @@
+<!-- This example is based on https://github.com/markmarkoh/datamaps -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+    <script src="https://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+</head>
+
+<body>
+<div id="container" style="position: relative; width: 900px; height: 700px;"></div>
+<div id="query_vis">
+    <p id="result_p"></p>
+</div>
+<script>
+        $(document).ready(function(){
+          var map = new Datamap({
+                  element: document.getElementById("container"),
+                  projection: 'mercator',
+                  fills: {
+                    defaultFill: "green",
+                    surveyCountry: "#fa0fa0"
+                  },
+                    data: {
+                            CYP: { fillKey: "surveyCountry" },
+                            CAN: { fillKey: "surveyCountry" },
+                            RWA: { fillKey: "surveyCountry" },
+                            ESP: {fillKey: "surveyCountry" },
+                            CHE: {fillKey: "surveyCountry" },
+                            NZL: {fillKey: "surveyCountry" },
+                            CHN: {fillKey: "surveyCountry" },
+                            USA: {fillKey: "surveyCountry" },
+                            GBR: {fillKey: "surveyCountry" },
+                            FRA: {fillKey: "surveyCountry" },
+                            ISR: {fillKey: "surveyCountry" },
+                            ROU: {fillKey: "surveyCountry" },
+                            AUS: {fillKey: "surveyCountry" },
+                            DEU: {fillKey: "surveyCountry" },
+                            HKG: {fillKey: "surveyCountry" },
+                            PSE: {fillKey: "surveyCountry" },
+                            PRT: {fillKey: "surveyCountry" },
+                            COL: {fillKey: "surveyCountry" },
+                            IRL: {fillKey: "surveyCountry" }
+                    },
+                           done: function(datamap) {
+                                datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                                    console.log(geography.properties.name);
+                                    var tmp_url = "/surveyCountry";
+                                    $.get(tmp_url, function(data, status){
+                                        var result = JSON.parse(data);
+                                        console.log(result);
+
+                                        // jQuery hide function to hide an html element
+                                        // you can use show function to show a hide element
+                                        $("#container").hide();
+                                        $("#result_p").text("Generating Ontology Graph...");
+                                    });
+                                });
+                           }
+          });
+           map.legend();
+        });
+
+  </script>
+</body>
+</html>
