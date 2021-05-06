@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Maps and Graphs</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+	<script src="https://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+	<!--<script src="d3.v3.min.js"></script>-->
+</head>
+
+
+<body>
+	<h1>Pandemic sentiments across the Globe</h1>
+	<div id="container" style="position: relative; width: 900px; height: 600px;"></div>
+    <div id="query_vis">
+        <p id="result_p" style="position: relative; width: 900px; height: 600px;"></p>
+	</div>
+
+	<script>
+		$(document).ready(function(){
+      var alertx=0;
+			var map = new Datamap({
+				element: document.getElementById('container'),
+				done: function(datamap) {
+					datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+						console.log(geography.properties.name);
+            if(geography.properties.name == 'United States of America'){
+            var tmp_url = "/api/query_survey_results2/"+geography.properties.name;
+            alertx=0}
+            else{
+              if(geography.properties.name == 'Romania'){
+              var tmp_url = "/api/query_survey_results4/"+geography.properties.name;
+              alertx=0}
+              else{
+                if(geography.properties.name == 'Switzerland'){
+                  var tmp_url = "/api/query_survey_results3/"+geography.properties.name;
+                  alertx=0}
+              else{
+                alert( "Selected country - "+geography.properties.name +" does not have enough data to show clusters")
+                alertx=1
+              }
+              }
+            }
+
+
+if(alertx==0){
+						$.get(tmp_url, function(data, status){
+							// jQuery hide function to hide an html element
+							// you can use show function to show a hide element
+							var jsonstr = JSON.stringify(data)
+							if(!jsonstr.includes("does not have any survey data")){
+								$("#container").hide();
+								console.log(status);
+                if(geography.properties.name == 'United States of America')
+								$("#result_p").text(buildGraph1(data));
+                else{
+                  if(geography.properties.name == 'Romania')
+  								$("#result_p").text(buildGraph2(data));
+                  else{
+                    if(geography.properties.name == 'Switzerland')
+                    	$("#result_p").text(buildGraph3(data));
+
+                  }
+                }
+							}
+							else{
+								$("#container").hide();
+								console.log(status);
+								$("#result_p").text(JSON.parse(data)['user_data']);
+							}
+						});}
+					});
+				}
+			});
+		});
+		function buildGraph1 (data){
+			console.log(data)
+			var country_name = JSON.parse(data)['country'];
+			var g10 = JSON.parse(data)['group1cluster0'];
+			var g11 = JSON.parse(data)['group1cluster1'];
+			var g12 = JSON.parse(data)['group1cluster2'];
+			var g20 = JSON.parse(data)['group2cluster0'];
+      var g21 = JSON.parse(data)['group2cluster1'];
+      var g22 = JSON.parse(data)['group2cluster2'];
+      var g30 = JSON.parse(data)['group3cluster0'];
+      var g31 = JSON.parse(data)['group3cluster1'];
+      var g32 = JSON.parse(data)['group3cluster2'];
+      var g40 = JSON.parse(data)['group4cluster0'];
+      var g41 = JSON.parse(data)['group4cluster1'];
+      var g42= JSON.parse(data)['group4cluster2'];
+
+
+
+
+
+
+			var isTooltipHidden = true;
+			var dots = [];
+			var lines = [];
+			var width, height;
+			if(country_name == "United States of America"){
+				width = 30000;
+				height = 30000;
+			}
+			else if(country_name == "Romania"){
+				width = 2500;
+				height = 2500;
+			}
+			else{
+				width = 1500;
+				height = 1000;
+			}
+			var num = 0;
+			if(!g10[0].length < 1 || !g10[0] == undefined){
+				dots.push({"country": country_name + " Young Male " + " Cluster0"});
+				num++;
+				for(i=0; i < g10[0].length; i++){
+					dots.push({"country": g10[0][i]});
+					lines.push({source: num-1, target: i + num, weight: 1});
+				}
+			}
+			num = dots.length;
+			if(!g11[0].length < 1 || !g11[0] == undefined){
+				dots.push({"country": country_name + " Young Male " + "Cluster1"});
+				num++;
+				for(i=0; i < g11[0].length; i++){
+					dots.push({"country": g11[0][i]});
+					lines.push({source: num-1, target: i + num, weight: 1})
+				}
+			}
+			num = dots.length;
+			if(!g12[0].length < 1 || !g12[0] == undefined){
+				dots.push({"country": country_name + " Young Male " + "Cluster2"});
+				num++;
+				for(i=0; i < g12[0].length; i++){
+					dots.push({"country": g12[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+			num = dots.length;
+			if(!g20[0].length < 1 || !g20[0] == undefined){
+				dots.push({"country": country_name + " Old Male " + "Cluster0"});
+				num++;
+				for(i=0; i < g20[0].length; i++){
+					dots.push({"country": g20[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g21[0].length < 1 || !g21[0] == undefined){
+				dots.push({"country": country_name + " Old Male " + " Cluster1"});
+				num++;
+				for(i=0; i < g21[0].length; i++){
+					dots.push({"country": g21[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g22[0].length < 1 || !g22[0] == undefined){
+				dots.push({"country": country_name + " Old Male " + " Cluster0"});
+				num++;
+				for(i=0; i < g22[0].length; i++){
+					dots.push({"country": g22[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g30[0].length < 1 || !g30[0] == undefined){
+				dots.push({"country": country_name + " Young Female " + " Cluster0"});
+				num++;
+				for(i=0; i < g30[0].length; i++){
+					dots.push({"country": g30[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g31[0].length < 1 || !g31[0] == undefined){
+				dots.push({"country": country_name + " Young Female " + " Cluster1"});
+				num++;
+				for(i=0; i < g31[0].length; i++){
+					dots.push({"country": g31[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g32[0].length < 1 || !g32[0] == undefined){
+				dots.push({"country": country_name + " Young Female " + " Cluster2"});
+				num++;
+				for(i=0; i < g32[0].length; i++){
+					dots.push({"country": g32[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g40[0].length < 1 || !g40[0] == undefined){
+				dots.push({"country": country_name + " Old Female " + " Cluster0"});
+				num++;
+				for(i=0; i < g40[0].length; i++){
+					dots.push({"country": g40[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g41[0].length < 1 || !g41[0] == undefined){
+				dots.push({"country": country_name + " Old Female " + " Cluster1"});
+				num++;
+				for(i=0; i < g41[0].length; i++){
+					dots.push({"country": g41[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+      num = dots.length;
+			if(!g42[0].length < 1 || !g42[0] == undefined){
+				dots.push({"country": country_name + " Old Female " + " Cluster1"});
+				num++;
+				for(i=0; i < g42[0].length; i++){
+					dots.push({"country": g42[0][i]});
+					lines.push({source: num - 1, target: i + num, weight: 1});
+				}
+			}
+
+			var dataset = {
+				nodes: dots,
+				edges: lines
+			};
+			var force = d3.layout.force()
+                // the nodes of a graph
+                .nodes(dataset.nodes)
+                // the edges of a graph
+                .links(dataset.edges)
+                // the size of the graph
+                .size([width, height])
+                .linkDistance([200])
+                // the strength of the force
+                .charge([-1200])
+                // start the force
+                // The force layout runs asynchronously. That is, when you call force.start()
+                .start();
+
+			// ten default colors from d3
+			// example: http://bl.ocks.org/aaizemberg/78bd3dade9593896a59d
+			var colors = d3.scale.category10();
+
+			// create a svg element
+			var svg = d3.select("p")
+					.append("svg")
+					.attr("width", width)
+					.attr("height", height);
+
+			// dynamically create graph edges
+			var edges = svg.selectAll("line")
+					.data(dataset.edges)
+					// .enter() creates the initial join of data to elements
+					// this can be very complex, please use it here for now
+					// later we may introduce these type of functions
+					.enter()
+					.append("line")
+					// line color
+					.style("stroke", "#ccc")
+					// line width
+					.style("stroke-width", 1);
+
+			// dynamically create graph nodes
+			var nodes = svg.selectAll("circle")
+					.data(dataset.nodes)
+					.enter()
+					// circle shape
+					.append("circle")
+					// radius is 10
+					.attr("r", 10)
+					// fill colors, this is defined by using category10();
+					.style("fill", function(d, i){
+					return colors(i);
+					})
+					// allow users to drag nodes
+					.call(force.drag)
+					.on("mouseover", clickNode)
+					.on("mouseout", nodeByeBye);
+
+			function clickNode(node) {
+				// update visibility
+				isTooltipHidden = !isTooltipHidden;
+				var visibility = (isTooltipHidden) ? "hidden" : "visible";
+
+				// load tooltip content (if it changes based on node)
+				loadTooltipContent(node);
+
+				if (isTooltipHidden) {
+					unPinNode(node);
+				}
+
+				// place tooltip where cursor was
+				return label.style("top", (d3.event.pageY -10) + "px").style("left", (d3.event.pageX + 10) + "px").style("visibility", visibility);
+			}
+
+			function nodeByeBye(node){
+				label.style("visibility", "hidden");
+			}
+
+			function unPinNode(node) {
+				node.fx = null;
+				node.fy = null;
+			}
+
+			function loadTooltipContent(node) {
+				//console.log(d3.select(this).text.style);
+				d3.select("text").style("visibility", "visible");
+			}
+
+			// dynamically create labels
+			var label = svg.selectAll(".mytext")
+            .data(dataset.nodes)
+            .enter()
+            .append("text")
+              .text(function (d) { return d.country; })
+              // where we want to render the label, start | middle | end
+              .style("text-anchor", "middle")
+              // color
+			  .style("fill", "#555")
+			  .style("visibility", "hidden")
+              .style("font-family", "Arial")
+			  .style("font-size", 12);
+
+
+
+
+
+    // read this: https://stackoverflow.com/questions/28745398/why-do-we-need-force-ontick-in-d3
+    // The tick handler is the function that enables you to get the state of the layout when it has changed
+    // (the simulation has advanced by a tick) and act on it -- in particular,
+    // redraw the nodes and links where they currently are in the simulation.
+    		force.on("tick", function(){
+     	 		edges.attr("x1", function(d){ return d.source.x; })
+					.attr("y1", function(d){ return d.source.y; })
+					.attr("x2", function(d){ return d.target.x; })
+					.attr("y2", function(d){ return d.target.y; });
+				nodes.attr("cx", function(d){ return d.x; })
+					.attr("cy", function(d){ return d.y; });
+				label.attr("x", function(d){ return d.x; })
+					.attr("y", function (d) {return d.y - 10; });
+
+
+			});
+};
+//////
+
+    function buildGraph2 (data){
+      console.log(data)
+      var country_name = JSON.parse(data)['country'];
+      var g10 = JSON.parse(data)['group1cluster0'];
+			var g11 = JSON.parse(data)['group1cluster1'];
+			var g12 = JSON.parse(data)['group1cluster2'];
+      var g30 = JSON.parse(data)['group3cluster0'];
+      var g31 = JSON.parse(data)['group3cluster1'];
+      var g32 = JSON.parse(data)['group3cluster2'];
+      var g40 = JSON.parse(data)['group4cluster0'];
+      var g41 = JSON.parse(data)['group4cluster1'];
+      var g42= JSON.parse(data)['group4cluster2'];
+
+
+
+      var isTooltipHidden = true;
+      var dots = [];
+      var lines = [];
+      var width, height;
+      if(country_name == "United States of America"){
+        width = 3000;
+        height = 3000;
+      }
+      else if(country_name == "Romania"){
+        width = 2500;
+        height = 2500;
+      }
+      else{
+        width = 1500;
+        height = 1000;
+      }
+      var num = 0;
+      if(!g10[0].length < 1 || !g10[0] == undefined){
+        dots.push({"country": country_name + " Young Male " + "Cluster0"});
+        num++;
+        for(i=0; i < g10[0].length; i++){
+          dots.push({"country": g10[0][i]});
+          lines.push({source: num-1, target: i + num, weight: 1});
+        }
+      }
+      num = dots.length;
+      if(!g11[0].length < 1 || !g11[0] == undefined){
+        dots.push({"country": country_name + " Young Male " + "Cluster1"});
+        num++;
+        for(i=0; i < g11[0].length; i++){
+          dots.push({"country": g11[0][i]});
+          lines.push({source: num-1, target: i + num, weight: 1})
+        }
+      }
+      num = dots.length;
+      if(!g12[0].length < 1 || !g12[0] == undefined){
+        dots.push({"country": country_name + " Young Male" + "Cluster2"});
+        num++;
+        for(i=0; i < g12[0].length; i++){
+          dots.push({"country": g12[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+      num = dots.length;
+      if(!g30[0].length < 1 || !g30[0] == undefined){
+        dots.push({"country": country_name + " Young Female " + "Cluster0"});
+        num++;
+        for(i=0; i < g30[0].length; i++){
+          dots.push({"country": g30[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+
+      num = dots.length;
+      if(!g31[0].length < 1 || !g31[0] == undefined){
+        dots.push({"country": country_name + " Young Female " + "Cluster1"});
+        num++;
+        for(i=0; i < g31[0].length; i++){
+          dots.push({"country": g31[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+
+      num = dots.length;
+      if(!g32[0].length < 1 || !g32[0] == undefined){
+        dots.push({"country": country_name + " Young Female " + "Cluster2"});
+        num++;
+        for(i=0; i < g32[0].length; i++){
+          dots.push({"country": g32[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+
+      num = dots.length;
+      if(!g40[0].length < 1 || !g40[0] == undefined){
+        dots.push({"country": country_name + " Old Female " + "Cluster0"});
+        num++;
+        for(i=0; i < g40[0].length; i++){
+          dots.push({"country": g40[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+
+      num = dots.length;
+      if(!g41[0].length < 1 || !g41[0] == undefined){
+        dots.push({"country": country_name + " Old Female " + "Cluster1"});
+        num++;
+        for(i=0; i < g41[0].length; i++){
+          dots.push({"country": g41[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+
+      num = dots.length;
+      if(!g42[0].length < 1 || !g42[0] == undefined){
+        dots.push({"country": country_name + " Old Female " + "Cluster2"});
+        num++;
+        for(i=0; i < g42[0].length; i++){
+          dots.push({"country": g42[0][i]});
+          lines.push({source: num - 1, target: i + num, weight: 1});
+        }
+      }
+      var dataset = {
+        nodes: dots,
+        edges: lines
+      };
+      var force = d3.layout.force()
+                // the nodes of a graph
+                .nodes(dataset.nodes)
+                // the edges of a graph
+                .links(dataset.edges)
+                // the size of the graph
+                .size([width, height])
+                .linkDistance([200])
+                // the strength of the force
+                .charge([-1200])
+                // start the force
+                // The force layout runs asynchronously. That is, when you call force.start()
+                .start();
+
+      // ten default colors from d3
+      // example: http://bl.ocks.org/aaizemberg/78bd3dade9593896a59d
+      var colors = d3.scale.category10();
+
+      // create a svg element
+      var svg = d3.select("p")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+      // dynamically create graph edges
+      var edges = svg.selectAll("line")
+          .data(dataset.edges)
+          // .enter() creates the initial join of data to elements
+          // this can be very complex, please use it here for now
+          // later we may introduce these type of functions
+          .enter()
+          .append("line")
+          // line color
+          .style("stroke", "#ccc")
+          // line width
+          .style("stroke-width", 1);
+
+      // dynamically create graph nodes
+      var nodes = svg.selectAll("circle")
+          .data(dataset.nodes)
+          .enter()
+          // circle shape
+          .append("circle")
+          // radius is 10
+          .attr("r", 10)
+          // fill colors, this is defined by using category10();
+          .style("fill", function(d, i){
+          return colors(i);
+          })
+          // allow users to drag nodes
+          .call(force.drag)
+          .on("mouseover", clickNode)
+          .on("mouseout", nodeByeBye);
+
+      function clickNode(node) {
+        // update visibility
+        isTooltipHidden = !isTooltipHidden;
+        var visibility = (isTooltipHidden) ? "hidden" : "visible";
+
+        // load tooltip content (if it changes based on node)
+        loadTooltipContent(node);
+
+        if (isTooltipHidden) {
+          unPinNode(node);
+        }
+
+        // place tooltip where cursor was
+        return label.style("top", (d3.event.pageY -10) + "px").style("left", (d3.event.pageX + 10) + "px").style("visibility", visibility);
+      }
+
+      function nodeByeBye(node){
+        label.style("visibility", "hidden");
+      }
+
+      function unPinNode(node) {
+        node.fx = null;
+        node.fy = null;
+      }
+
+      function loadTooltipContent(node) {
+        //console.log(d3.select(this).text.style);
+        d3.select("text").style("visibility", "visible");
+      }
+
+      // dynamically create labels
+      var label = svg.selectAll(".mytext")
+            .data(dataset.nodes)
+            .enter()
+            .append("text")
+              .text(function (d) { return d.country; })
+              // where we want to render the label, start | middle | end
+              .style("text-anchor", "middle")
+              // color
+        .style("fill", "#555")
+        .style("visibility", "hidden")
+              .style("font-family", "Arial")
+        .style("font-size", 12);
+
+
+
+
+
+    // read this: https://stackoverflow.com/questions/28745398/why-do-we-need-force-ontick-in-d3
+    // The tick handler is the function that enables you to get the state of the layout when it has changed
+    // (the simulation has advanced by a tick) and act on it -- in particular,
+    // redraw the nodes and links where they currently are in the simulation.
+        force.on("tick", function(){
+          edges.attr("x1", function(d){ return d.source.x; })
+          .attr("y1", function(d){ return d.source.y; })
+          .attr("x2", function(d){ return d.target.x; })
+          .attr("y2", function(d){ return d.target.y; });
+        nodes.attr("cx", function(d){ return d.x; })
+          .attr("cy", function(d){ return d.y; });
+        label.attr("x", function(d){ return d.x; })
+          .attr("y", function (d) {return d.y - 10; });
+
+
+      });
+};
+  //////
+
+  function buildGraph3 (data){
+    console.log(data)
+    var country_name = JSON.parse(data)['country'];
+    var g30 = JSON.parse(data)['group3cluster0'];
+    var g31 = JSON.parse(data)['group3cluster1'];
+    var g32 = JSON.parse(data)['group3cluster2'];
+
+
+
+    var isTooltipHidden = true;
+    var dots = [];
+    var lines = [];
+    var width, height;
+    if(country_name == "United States of America"){
+      width = 30000;
+      height = 30000;
+    }
+    else if(country_name == "Romania"){
+      width = 2500;
+      height = 2500;
+    }
+    else{
+      width = 1500;
+      height = 1000;
+    }
+    var num = 0;
+
+    if(!g30[0].length < 1 || !g30[0] == undefined){
+      dots.push({"country": country_name + " Young Female " + " Cluster0"});
+      num++;
+      for(i=0; i < g30[0].length; i++){
+        dots.push({"country": g30[0][i]});
+        lines.push({source: num - 1, target: i + num, weight: 1});
+      }
+    }
+
+    num = dots.length;
+    if(!g31[0].length < 1 || !g31[0] == undefined){
+      dots.push({"country": country_name + " Young Female " + " Cluster1"});
+      num++;
+      for(i=0; i < g31[0].length; i++){
+        dots.push({"country": g31[0][i]});
+        lines.push({source: num - 1, target: i + num, weight: 1});
+      }
+    }
+
+    num = dots.length;
+    if(!g32[0].length < 1 || !g32[0] == undefined){
+    	dots.push({"country": country_name + " Young Female " + " Cluster2"});
+    	num++;
+    	for(i=0; i < g32[0].length; i++){
+    		dots.push({"country": g32[0][i]});
+    		lines.push({source: num - 1, target: i + num, weight: 1});
+    	}
+    }
+
+    var dataset = {
+      nodes: dots,
+      edges: lines
+    };
+    var force = d3.layout.force()
+              // the nodes of a graph
+              .nodes(dataset.nodes)
+              // the edges of a graph
+              .links(dataset.edges)
+              // the size of the graph
+              .size([width, height])
+              .linkDistance([200])
+              // the strength of the force
+              .charge([-1200])
+              // start the force
+              // The force layout runs asynchronously. That is, when you call force.start()
+              .start();
+
+    // ten default colors from d3
+    // example: http://bl.ocks.org/aaizemberg/78bd3dade9593896a59d
+    var colors = d3.scale.category10();
+
+    // create a svg element
+    var svg = d3.select("p")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    // dynamically create graph edges
+    var edges = svg.selectAll("line")
+        .data(dataset.edges)
+        // .enter() creates the initial join of data to elements
+        // this can be very complex, please use it here for now
+        // later we may introduce these type of functions
+        .enter()
+        .append("line")
+        // line color
+        .style("stroke", "#ccc")
+        // line width
+        .style("stroke-width", 1);
+
+    // dynamically create graph nodes
+    var nodes = svg.selectAll("circle")
+        .data(dataset.nodes)
+        .enter()
+        // circle shape
+        .append("circle")
+        // radius is 10
+        .attr("r", 10)
+        // fill colors, this is defined by using category10();
+        .style("fill", function(d, i){
+        return colors(i);
+        })
+        // allow users to drag nodes
+        .call(force.drag)
+        .on("mouseover", clickNode)
+        .on("mouseout", nodeByeBye);
+
+    function clickNode(node) {
+      // update visibility
+      isTooltipHidden = !isTooltipHidden;
+      var visibility = (isTooltipHidden) ? "hidden" : "visible";
+
+      // load tooltip content (if it changes based on node)
+      loadTooltipContent(node);
+
+      if (isTooltipHidden) {
+        unPinNode(node);
+      }
+
+      // place tooltip where cursor was
+      return label.style("top", (d3.event.pageY -10) + "px").style("left", (d3.event.pageX + 10) + "px").style("visibility", visibility);
+    }
+
+    function nodeByeBye(node){
+      label.style("visibility", "hidden");
+    }
+
+    function unPinNode(node) {
+      node.fx = null;
+      node.fy = null;
+    }
+
+    function loadTooltipContent(node) {
+      //console.log(d3.select(this).text.style);
+      d3.select("text").style("visibility", "visible");
+    }
+
+    // dynamically create labels
+    var label = svg.selectAll(".mytext")
+          .data(dataset.nodes)
+          .enter()
+          .append("text")
+            .text(function (d) { return d.country; })
+            // where we want to render the label, start | middle | end
+            .style("text-anchor", "middle")
+            // color
+      .style("fill", "#555")
+      .style("visibility", "hidden")
+            .style("font-family", "Arial")
+      .style("font-size", 12);
+
+    // we define mouseover and mouse out event
+    // label
+    // 	.on('mouseover', function (d) {
+    // 		// Highlight the nodes
+    // 		// nodes.style('fill', d.color_original)
+    // 		d3.select(this).style('visibility', "visible")
+    // 	})
+    // 	.on('mouseout', function (d) {
+    // 		d3.select(this).style('visibility', "hidden")
+    // 	});
+
+
+
+  // read this: https://stackoverflow.com/questions/28745398/why-do-we-need-force-ontick-in-d3
+  // The tick handler is the function that enables you to get the state of the layout when it has changed
+  // (the simulation has advanced by a tick) and act on it -- in particular,
+  // redraw the nodes and links where they currently are in the simulation.
+      force.on("tick", function(){
+        edges.attr("x1", function(d){ return d.source.x; })
+        .attr("y1", function(d){ return d.source.y; })
+        .attr("x2", function(d){ return d.target.x; })
+        .attr("y2", function(d){ return d.target.y; });
+      nodes.attr("cx", function(d){ return d.x; })
+        .attr("cy", function(d){ return d.y; });
+      label.attr("x", function(d){ return d.x; })
+        .attr("y", function (d) {return d.y - 10; });
+
+
+    });
+		};
+	</script>
+
+</body>
+</html>

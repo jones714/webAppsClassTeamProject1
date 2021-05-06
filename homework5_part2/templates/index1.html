@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Upload a CSV File</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+
+<body>
+	<h1>Show user data from backend</h1>
+	<!-- <p>{{column_names}}</p>
+	<p>{{data_part}}</p> -->
+<!-- For loop for each split list -->
+{% for i in range(len_country) %}
+  <h1 align = “center”>{{country[i]}}</h1>
+	{% for j in range(3) %}
+		<h2>Cluster: {{j}}</h2>
+
+
+	<table class="table">
+		<thead>
+		  <tr>
+			{% for item in column_html %}
+				<th>{{item}}</th>
+			{% endfor %}
+		  </tr>
+		</thead>
+		<tbody>
+		  {% for row in x1[i][j] %}
+			   <tr>
+				{% for data in row %}
+					<td>{{ data }}</td>
+				{% endfor %}
+			   </tr>
+		   {% endfor %}
+
+
+		</tbody>
+	  </table>
+
+		{% endfor %}
+		 {% endfor %}
+
+</body>
+</html>
