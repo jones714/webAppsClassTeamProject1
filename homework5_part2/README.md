@@ -51,6 +51,35 @@ Because we are now inside a virtual environment. We do not need sudo.
 
 ```
 
+```
+Create a table named covid_survey and public is the schema name for homework_webapp database.
+```
+
+CREATE TABLE public.covid_survey
+(
+    index integer,
+    "What country do you live in?" character varying(100),
+    "How old are you?" integer,
+    "What is your gender?" character varying(100),
+    "To what extent do you feel FEAR due to the coronavirus?" integer,
+    "To what extent do you feel ANXIOUS due to the coronavirus?" integer,
+    "To what extent do you feel ANGRY due to the coronavirus?" integer,
+    "To what extent do you feel HAPPY due to the coronavirus?" integer,
+    "To what extent do you feel SAD due to the coronavirus?" integer,
+    "Which emotion is having the biggest impact on you?" character varying(1600),
+    "What makes you feel that way?" character varying(1600),
+    "What brings you the most meaning during the coronavirus outbrea" character varying(1600),
+    "What is your occupation?" character varying(1600)
+)
+
+
+```
+once the table is created, go to the table created on the left hand side and right click on it and select the option import/export
+
+Select Import, provide the path of csv file under Filename option, Miscellaneous -> Header -> yes, Delimiter ->',' and then press ok and csv file data would be
+imported for the table created.
+```
+
 Then you can start the server with:
 ```
 python3 main.py
